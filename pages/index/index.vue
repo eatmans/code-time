@@ -5,7 +5,7 @@
 		</view>
 		<view class="c-countdown" v-if="start">
 			<u-count-down ref="uCountDown" :timestamp="startSec" :autoplay="autoplay" :show-days="false"
-				@change="timeChange" :font-size="70" :pause="pause"></u-count-down>
+				@change="timeChange" :font-size="100" :separatorSize="65" :pause="pause"></u-count-down>
 		</view>
 		<view class="u-picker-body" v-if="!start">
 			<picker-view :value="valueArr" @change="change" class="u-picker-view" @pickstart="pickstart"
@@ -54,12 +54,12 @@
 				</view>
 
 			</view>
-
+<!-- 按钮 -->
 			<view class="c-controller-area" v-if="start">
-				<view class="c-button" @tap="restartCountTime()">
+				<view :animation="animationToLeftData" class="c-button" @tap="restartCountTime()">
 					<image class="c-icon" src="../../static/restart.png"></image>
 				</view>
-				<view class="c-button" @tap="stopCountTime()" v-if="!pause">
+				<view :animation="animationToRightData" class="c-button" @tap="stopCountTime()" v-if="!pause">
 					<image class="c-icon" src="../../static/stop.png"></image>
 				</view>
 				<view class="c-button" @tap="stopCountTime()" v-if="pause">
@@ -107,6 +107,10 @@
 				defaultTime: [5, 10, 15],
 				notie: "",
 				moving: false, // 列是否还在滑动中，微信小程序如果在滑动中就点确定，结果可能不准确
+				// 动画
+				animation:null,
+				animationToLeftData:{},
+				animationToRightData:{},
 			};
 		},
 		mounted() {
@@ -151,8 +155,28 @@
 				this.autoplay = true;
 				this.pause = false;
 				console.log("开始倒计时：", this.startDate);
+				// 执行动画
+				let leftButton = uni.createAnimation({
+				  transformOrigin: "50% 50%",
+				  duration: 500,
+				  timingFunction: "ease",
+				  delay: 0
+				})
+				// 执行动画
+				let rightButton = uni.createAnimation({
+				  transformOrigin: "50% 50%",
+				  duration: 500,
+				  timingFunction: "ease",
+				  delay: 0
+				})
+				this.animation = leftButton
+				 leftButton.translateX(-60).step()
+				this.animationToLeftData = leftButton.export()
+				this.animation = leftButton
+				 rightButton.translateX(60).step()
+				this.animationToRightData = rightButton.export()
 			},
-
+			
 			restartCountTime() {
 				this.start = false;
 				this.startDate = this.timestamp;
@@ -242,21 +266,6 @@
 				this.currentSec = timestamp;
 			},
 
-			setDays() {
-				let totalDays = new Date(this.year, this.month, 0).getDate();
-				this.days = this.generateArray(1, totalDays);
-				let index = 0;
-				// 这里不能使用类似setMonths()中的this.valueArr.splice(this.valueArr.length - 1, xxx)做法
-				// 因为this.month和this.year变化时，会触发watch中的this.setDays()，导致this.valueArr.length计算有误
-				if (this.year && this.month) index = 2;
-				else if (this.month) index = 1;
-				else if (this.year) index = 1;
-				else index = 0;
-				// 当月份变化时，会导致日期的天数也会变化，如果原来选的天数大于变化后的天数，则重置为变化后的最大值
-				// 比如原来选中3月31日，调整为2月后，日期变为最大29，这时如果day值继续为31显然不合理，于是将其置为29(picker-column从1开始)
-				if (this.day > this.days.length) this.day = this.days.length;
-				this.valueArr.splice(index, 1, this.getIndex(this.days, this.day));
-			},
 			setHours() {
 				this.hours = this.generateArray(0, 23);
 				this.valueArr.splice(this.valueArr.length - 1, 1, this.getIndex(this.hours, this.hour));
@@ -342,9 +351,11 @@
 		height: 100%;
 		width: 700rpx;
 		box-sizing: border-box;
+		margin: 0 auto;
 	}
 
 	.u-picker-body {
+		margin:50rpx 0 0 0;
 		width: 100%;
 		height: 500rpx;
 		overflow: hidden;
@@ -421,6 +432,7 @@
 	}
 
 	.c-button {
+		position: absolute;
 		display: flex;
 		flex-direction: column;
 		justify-content: center;
@@ -461,6 +473,6 @@
 		justify-content: center;
 		align-items: center;
 		width: 100%;
-		bottom: 50rpx;
+		bottom: 120rpx;
 	}
 </style>
