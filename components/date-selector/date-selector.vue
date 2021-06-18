@@ -36,7 +36,11 @@
 				hours: [],
 				minutes: [],
 				seconds: [],
+				hour: 0,
+				minute: 0,
+				second: 0,
 				valueArr: [],
+				timestamp:300
 			};
 		},
 		props:{
@@ -76,6 +80,7 @@
 			pickend() {
 				// #ifdef MP-WEIXIN
 				this.moving = false;
+				this.$emit('pickend',this.timestamp)
 				// #endif
 			},
 			setHours() {
@@ -103,16 +108,14 @@
 			change(e) {
 				this.valueArr = e.detail.value;
 				let i = 0;
-				console.log("this.valueArr", this.valueArr)
 				this.hour = this.hours[this.valueArr[i++]];
 				this.minute = this.minutes[this.valueArr[i++]];
 				this.second = this.seconds[this.valueArr[i++]];
 				this.getTimeToSecond(this.hour, this.minute, this.second);
-				// console.log(this.hour, "时", this.minute, "分", this.second, "秒")
 			},
 			// 将picker的时间专成秒数
 			getTimeToSecond(hour, minute, second) {
-				var time = 0;
+				let time = 0;
 				if (hour) {
 					time += hour * 60 * 60;
 				}
@@ -122,9 +125,16 @@
 				if (second) {
 					time += second;
 				}
-				// console.log("总秒数", time)
 				this.timestamp = time;
 			},
+			quickSetMinutes(minutes){
+				this.valueArr[0] = 0;
+				this.valueArr[1] = minutes;
+				this.valueArr[2] = 0;
+				this.setHours()
+				this.setMinutes()
+				this.setSeconds()
+			}
 		}
 	}
 </script>

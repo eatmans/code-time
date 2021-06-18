@@ -21,15 +21,15 @@
 		padding: 50rpx 20rpx 20rpx 20rpx;
 		margin: 20rpx;
 		color: #007aff;
-		font-size: 45rpx;
 		width: 90%;
+		height: 60rpx;
 		.c-input {
-			width: 100%;
 			text-align: center;
 			font-size: 45rpx;
-			// background-color: #3F536E;
+			line-height: 45rpx;
+			height: 60rpx;
 		}
-		
+
 		.c-input-pla {
 			color: #e7e7e7;
 		}
