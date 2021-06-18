@@ -1,0 +1,25 @@
+{
+  "name": "code-time",
+  "version": "0.0.3",
+  "description": "可得计时",
+  "main": "main.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/QC2168/code-time.git"
+  },
+  "author": "QC2168",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/QC2168/code-time/issues"
+  },
+  "homepage": "https://github.com/QC2168/code-time#readme",
+  "dependencies": {
+    "uview-ui": "^1.8.4"
+  }
+}
